@@ -1,46 +1,61 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter, Stack } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context'; // ✅ Add this
 
 export default function GenImagesScreen() {
+  const router = useRouter();
+
   return (
-    <View style={styles.container}>
-      {/* Top Navigation */}
-      <View style={styles.topBar}>
-        <Ionicons name="arrow-back" size={28} color="#ff6600" />
-        <TouchableOpacity style={styles.upgradeButton}>
-          <Text style={styles.upgradeText}>UPGRADE</Text>
-        </TouchableOpacity>
-      </View>
+    <>
+      <SafeAreaView style={styles.safeArea}> {/* ✅ Safe area wrapper */}
+        <View style={styles.container}>
+          {/* Top Navigation */}
+          <View style={styles.topBar}>
+            <TouchableOpacity onPress={() => router.push('/')}>
+              <Ionicons name="arrow-back" size={28} color="#ff6600" />
+            </TouchableOpacity>
 
-      {/* Upload Image Box */}
-      <View style={styles.uploadBox}>
-        <Image
-          source={require('../assets/images/BackGroundGenScreen.jpg')}
-          style={styles.image}
-          resizeMode="cover"
-        />
-        <View style={styles.overlay}>
-          <Ionicons name="cloud-upload-outline" size={28} color="#008080" />
-          <Text style={styles.uploadTitle}>Upload Your Photo</Text>
-          <Text style={styles.uploadDescription}>
-            A <Text style={{ fontWeight: 'bold' }}>close-up</Text> photo, profile pic or a selfie of <Text style={{ color: '#ff6600' }}>yourself</Text> or someone else!
-          </Text>
+            <TouchableOpacity style={styles.upgradeButton}>
+              <Text style={styles.upgradeText}>UPGRADE</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Upload Image Box */}
+          <View style={styles.uploadBox}>
+            <Image
+              source={require('../assets/images/BackGroundGenScreen.jpg')}
+              style={styles.image}
+              resizeMode="cover"
+            />
+            <View style={styles.overlay}>
+              <Ionicons name="cloud-upload-outline" size={28} color="#008080" />
+              <Text style={styles.uploadTitle}>Upload Your Photo</Text>
+              <Text style={styles.uploadDescription}>
+                A <Text style={{ fontWeight: 'bold' }}>close-up</Text> photo, profile pic or a selfie of{' '}
+                <Text style={{ color: '#ff6600' }}>yourself</Text> or someone else!
+              </Text>
+            </View>
+          </View>
+
+          {/* Button */}
+          <TouchableOpacity style={styles.createButton}>
+            <Text style={styles.createText}>✨ Generate Your Avatar</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-
-      {/* Button */}
-      <TouchableOpacity style={styles.createButton}>
-        <Text style={styles.createText}>✨ Generate Your Avatar</Text>
-      </TouchableOpacity>
-    </View>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
     padding: 16,
   },
   topBar: {

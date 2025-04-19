@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import TopCardItem from './topCardItem';
+import { useRouter } from 'expo-router';
 
 const topCards = [
   {
@@ -16,11 +17,14 @@ const topCards = [
 ];
 
 export const TopCardList = () => {
+  const router = useRouter();
   return (
     <FlatList
       data={topCards}
       keyExtractor={(item, index) => index.toString()}
-      renderItem={({ item }) => <TopCardItem {...item} />}
+      renderItem={({ item }) => (
+        <TopCardItem {...item} onPress={() => router.push('/genImages')} />
+      )}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingVertical: 16 }}

@@ -50,7 +50,6 @@ export default function HomeScreen() {
       colors={['#FFE4E1', '#F8E1FF']}
       style={{ flex: 1 }}
     >
-      {/* 🔒 Fixed Top Area */}
       <View style={{ paddingTop: 60, paddingHorizontal: 16 }}>
         {/* Top Bar */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

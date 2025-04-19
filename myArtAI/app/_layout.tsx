@@ -29,10 +29,8 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        {/* 👇 Hide header for tab screens */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        {/* 👇 Hide header specifically for genImages screen */}
         <Stack.Screen name="genImages" options={{ headerShown: false }} />
 
         <Stack.Screen name="+not-found" />

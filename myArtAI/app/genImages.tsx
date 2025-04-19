@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context'; // ✅ Add this
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function GenImagesScreen() {
   const router = useRouter();
 
   return (
     <>
-      <SafeAreaView style={styles.safeArea}> {/* ✅ Safe area wrapper */}
+      <SafeAreaView style={styles.safeArea}> 
         <View style={styles.container}>
           {/* Top Navigation */}
           <View style={styles.topBar}>

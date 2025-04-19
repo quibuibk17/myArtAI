@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const TrendingStyleCard = ({ image, title, type, rating, views }: Props) => {
-  const router = useRouter(); // 👈 Add router here
+  const router = useRouter();
 
   return (
     <View style={{
@@ -33,7 +33,6 @@ export const TrendingStyleCard = ({ image, title, type, rating, views }: Props) 
         </View>
       </View>
 
-      {/* 👉 Add navigation inside button */}
       <TouchableOpacity
         style={{
           backgroundColor: '#8a2be2',
@@ -41,7 +40,7 @@ export const TrendingStyleCard = ({ image, title, type, rating, views }: Props) 
           paddingHorizontal: 12,
           borderRadius: 20
         }}
-        onPress={() => router.push('/genImages')} // 👈 This is where navigation happens
+        onPress={() => router.push('/genImages')}
       >
         <Text style={{ color: 'white', fontWeight: '600' }}>Create</Text>
       </TouchableOpacity>

@@ -5,8 +5,10 @@ import { TopCardList } from '../../components/ui/topCardList';
 import { TrendingStyleCard } from '../../components/ui/trendingStyleCard';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const trendingStyles = [
     {
       image: require('../../assets/images/myResizedImages/Ghibli.jpg'),
@@ -68,7 +70,7 @@ export default function HomeScreen() {
       >
         <View style={{ paddingHorizontal: 16, marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Trending Styles</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/genImages')}>
             <Text style={{ color: '#8a2be2', fontWeight: '600' }}>See All Styles</Text>
           </TouchableOpacity>
         </View>

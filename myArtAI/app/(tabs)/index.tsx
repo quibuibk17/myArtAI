@@ -1,74 +1,83 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// app/(tabs)/index.tsx
+import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { TopCardList } from '../../components/ui/topCardList';
+import { TrendingStyleCard } from '../../components/ui/trendingStyleCard';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+  const trendingStyles = [
+    {
+      image: require('../../assets/images/myResizedImages/Ghibli.jpg'),
+      title: 'Ghibli',
+      type: 'Avatar',
+      rating: 5,
+      views: '300k',
+    },
+    {
+      image: require('../../assets/images/myResizedImages/Cartoon.jpg'),
+      title: 'Cartoon',
+      type: 'Avatar',
+      rating: 4.5,
+      views: '250k',
+    },
+    {
+      image: require('../../assets/images/myResizedImages/Joyful.jpg'),
+      title: 'Joyful Nod',
+      type: 'Video',
+      rating: 4.7,
+      views: '150k',
+    },
+    {
+      image: require('../../assets/images/myResizedImages/Warm.jpg'),
+      title: 'Warm Greeting',
+      type: 'Video',
+      rating: 5,
+      views: '50k',
+    },
+    {
+      image: require('../../assets/images/myResizedImages/Sticker.jpg'),
+      title: 'Sticker',
+      type: 'Sticker',
+      rating: 4.3,
+      views: '40k',
+    },
+  ];
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+  return (
+    <LinearGradient
+      colors={['#FFE4E1', '#F8E1FF']}
+      style={{ flex: 1 }}
+    >
+      {/* 🔒 Fixed Top Area */}
+      <View style={{ paddingTop: 60, paddingHorizontal: 16 }}>
+        {/* Top Bar */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Ionicons name="menu" size={28} color="black" />
+          <Ionicons name="diamond" size={28} color="#8a2be2" />
+        </View>
+  
+        {/* TopCard horizontal scroll */}
+        <TopCardList />
+      </View>
+  
+      {/* 🧻 Scrollable Content */}
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={{ paddingBottom: 80 }}
+      >
+        <View style={{ paddingHorizontal: 16, marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Trending Styles</Text>
+          <TouchableOpacity>
+            <Text style={{ color: '#8a2be2', fontWeight: '600' }}>See All Styles</Text>
+          </TouchableOpacity>
+        </View>
+  
+        {trendingStyles.map((style, index) => (
+          <TrendingStyleCard key={index} {...style} />
+        ))}
+      </ScrollView>
+    </LinearGradient>
+  );  
+}

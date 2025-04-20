@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions } from 'react-native';
 
 export default function GenImagesScreen() {
+  // Style definitions
+  const styleOptions = [
+    { name: 'Ghibli', image: require('../assets/images/myResizedImages/Ghibli.jpg') },
+    { name: 'Cartoon', image: require('../assets/images/myResizedImages/Cartoon.jpg') },
+    { name: 'Joyful', image: require('../assets/images/myResizedImages/Joyful.jpg') },
+    { name: 'Warm', image: require('../assets/images/myResizedImages/Warm.jpg') },
+    { name: 'Sticker', image: require('../assets/images/myResizedImages/Sticker.jpg') },
+  ];
+
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [selectedStyle, setSelectedStyle] = useState(styleOptions[0].name);
   const [loading, setLoading] = useState(false);
 
   const pickImage = async () => {
@@ -42,14 +52,20 @@ export default function GenImagesScreen() {
         },
         body: JSON.stringify({
           image: selectedImage.base64,
-          prompt: 'Convert the attach images into a ghibli style art',
+          prompt: `Convert the attach images into a ${selectedStyle} style art`,
         }),
       });
 
       const data = await response.json();
 
       if (data?.image) {
-        setGeneratedImage(`data:image/jpeg;base64,${data.image}`);
+        router.push({
+          pathname: '/result',
+          params: {
+            generated: data.image,
+            style: selectedStyle,
+          },
+        });
       } else {
         Alert.alert('Failed', 'No image returned from server.');
       }
@@ -75,7 +91,7 @@ export default function GenImagesScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Upload Image Box */}
+        {/* Uploaded Image or Upload Box */}
         <TouchableOpacity style={styles.uploadBox} onPress={pickImage}>
           {selectedImage ? (
             <Image source={{ uri: selectedImage.uri }} style={styles.image} resizeMode="cover" />
@@ -98,35 +114,39 @@ export default function GenImagesScreen() {
           )}
         </TouchableOpacity>
 
-        {/* Button */}
+        {/* Style Selection */}
+        <Text style={styles.styleLabel}>Choose a Style</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
+          {styleOptions.map((style) => (
+            <TouchableOpacity
+              key={style.name}
+              onPress={() => setSelectedStyle(style.name)}
+              style={[
+                styles.styleBox,
+                selectedStyle === style.name && styles.styleBoxSelected,
+              ]}
+            >
+              <Image source={style.image} style={styles.styleImage} />
+              <Text style={styles.styleName}>{style.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Generate Button */}
         <TouchableOpacity style={styles.createButton} onPress={generateImage}>
           <Text style={styles.createText}>✨ Generate Your Avatar</Text>
         </TouchableOpacity>
 
-        {/* Loading & Result */}
         {loading && <ActivityIndicator size="large" color="#ff6600" style={{ marginTop: 20 }} />}
-
-        {generatedImage && (
-          <Image
-            source={{ uri: generatedImage }}
-            style={{ width: '100%', height: 300, borderRadius: 20, marginTop: 24 }}
-            resizeMode="cover"
-          />
-        )}
       </View>
     </SafeAreaView>
   );
 }
-
+const screenWidth = Dimensions.get('window').width;
+const styleBoxWidth = (screenWidth - 64) / 3; // 3 boxes with padding/margin
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-  },
+  safeArea: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 16 },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -144,7 +164,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   uploadBox: {
-    marginTop: 32,
+    marginTop: 16,
+    height: 500, // Bigger height
     borderWidth: 2,
     borderColor: '#00bcd4',
     borderRadius: 20,
@@ -152,17 +173,19 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 250,
+    height: '100%', // Fill parent
     opacity: 0.3,
   },
   overlay: {
     position: 'absolute',
-    width: '100%',
-    height: 250,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-  },
+  },  
   uploadTitle: {
     fontSize: 20,
     fontWeight: '700',
@@ -174,8 +197,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#555',
   },
+  styleLabel: {
+    marginTop: 20,
+    fontWeight: '600',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  styleScroll: {
+    marginBottom: 16,
+  },
+  styleButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+    marginRight: 10,
+  },
+  styleButtonSelected: {
+    backgroundColor: '#ff6600',
+  },
+  styleButtonText: {
+    fontWeight: '500',
+    color: '#333',
+  },
+  styleButtonTextSelected: {
+    color: '#fff',
+  },
   createButton: {
-    marginTop: 40,
+    marginTop: 10,
     backgroundColor: '#ff6600',
     padding: 16,
     borderRadius: 50,
@@ -186,4 +235,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
+  styleBox: {
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 8,
+    width: styleBoxWidth,
+    backgroundColor: '#fff',
+    marginRight: 10,
+  },
+  styleBoxSelected: {
+    borderColor: '#ff6600',
+    borderWidth: 2,
+  },
+  styleImage: {
+    width: '100%',
+    height: styleBoxWidth - 30, // Adjust height to keep a nice ratio
+    borderRadius: 10,
+    resizeMode: 'cover',
+  },
+  styleName: {
+    marginTop: 6,
+    fontSize: 14,
+    fontWeight: '500',
+    textAlign: 'center',
+  },  
 });
